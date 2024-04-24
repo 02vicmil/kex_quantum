@@ -3,8 +3,6 @@ Welcome to the project page for our candidate project. The projects purpose is t
 
 ![alt text](/resources/grover_circuit.png)
 
-## LICENCE
-TODO
 
 ## Getting stared
 ### Installing dependencies
