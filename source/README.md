@@ -20,3 +20,13 @@ Implementation of grover's algoritm, with ancilla bits.
 Ancilla bits means that the ciruit uses more qubits. The ancilla qubits are used when implementing large controlled not gates, central for implementing the oracle. They are not strictly necessary for the implementation, but using them can lead to improved performance and less noise.
 
 (MCZ stands for Multi-Controlled Z, which is a special quantum gate)
+
+## experiments
+The experiments whose results are part of the thesis behind this project
+
+## examples
+Examples of how to configure and run several of the modules or scripts in `qiskit_util`.
+
+## misc
+Other files that are used outside the scope of the thesis
+
