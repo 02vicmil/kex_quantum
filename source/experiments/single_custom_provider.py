@@ -70,12 +70,12 @@ for noise in noise_types:
             counts_for_i_as_array = [0 for _ in range(NUM_STATES)]
             for key_binary, value in counts_for_i.items():
                 index = int(key_binary, 2)
-                counts_for_i_as_array[index] = value
+                counts_for_i_as_array[index] = value / SHOTS * 100
             counts_per_marked.append(counts_for_i_as_array)
 
         index = index_permutation[plot_index]
         axis = axes[index//3][index%3]
-        heatmap = axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin = 0, vmax=SHOTS)
+        heatmap = axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin = 0, vmax=100)
         axis.set_xticks(TICKS_RANGE, TICKS, rotation=90)
         axis.set_yticks(TICKS_RANGE, TICKS)
         title = f"{noise_size} {noise}"
@@ -86,7 +86,7 @@ for noise in noise_types:
 
 # Draw heatmap
 colorbar = figure.colorbar(heatmap, ax=axes.ravel().tolist())
-colorbar.ax.set_ylabel("Amount Measured", rotation=-90, va="bottom")
+colorbar.ax.set_ylabel("Correctly Measured (%)", rotation=-90, va="bottom")
 
 file_name = f"graph_{GRAPH_DEGREE_ENCODING[graph_index]}_grover_results.pdf"
 path = os.path.join(directory, file_name)

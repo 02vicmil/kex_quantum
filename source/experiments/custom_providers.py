@@ -24,7 +24,7 @@ TICKS = [f"|{{0:0{NUM_QUBITS}b}}⟩".format(i) for i in range(0, NUM_STATES)]
 TICKS_RANGE = np.arange(0, NUM_STATES)
 
 mpl.rcParams["font.family"] = "serif"
-mpl.rcParams["figure.titlesize"] = 24
+mpl.rcParams["figure.titlesize"] = 20
 mpl.rcParams["font.size"] = 14
 
 for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
@@ -72,7 +72,7 @@ for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
                 counts_for_i_as_array = [0 for _ in range(NUM_STATES)]
                 for key_binary, value in counts_for_i.items():
                     index = int(key_binary, 2)
-                    counts_for_i_as_array[index] = value
+                    counts_for_i_as_array[index] = value/SHOTS * 100
                 counts_per_marked.append(counts_for_i_as_array)
 
             figure, (coupling_ax, measures_ax, depths_ax) = plt.subplots(3, 1, figsize=(9, 24))
@@ -82,9 +82,9 @@ for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
             coupling_ax.set_title("Coupling Map")
             
             # Draw heatmap
-            heatmap = measures_ax.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin = 0, vmax=SHOTS)
+            heatmap = measures_ax.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin = 0, vmax=100)
             colorbar = measures_ax.figure.colorbar(heatmap, ax=measures_ax)
-            colorbar.ax.set_ylabel("Amount Measured", rotation=-90, va="bottom")
+            colorbar.ax.set_ylabel("Correctly Measured (%)", rotation=-90, va="bottom")
             measures_ax.set_xticks(TICKS_RANGE, TICKS)
             measures_ax.set_yticks(TICKS_RANGE, TICKS)
             measures_ax.set_xlabel("Measured")

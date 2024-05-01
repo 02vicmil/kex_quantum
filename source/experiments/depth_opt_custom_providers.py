@@ -38,8 +38,8 @@ depth_axis.set_ylabel("Depth")
 count_axis.set_xticks(X_TICKS + 1.5*WDITH, range(0, len(UNIQUE_5_COUPLINGS)))
 count_axis.set_xticklabels(GRAPH_DEGREE_ENCODING, rotation=90)
 count_axis.set_xlabel("Graph Number")
-count_axis.set_ylabel("Number of Correctly Measured")
-count_axis.set_ylim(0, SHOTS)
+count_axis.set_ylabel("Correctly Measured (%)")
+count_axis.set_ylim(0, 100)
 
 # Experiment starts here
 for optimisation_level in range(0, NUM_OPTIMISATION_LEVELS):
@@ -67,7 +67,7 @@ for optimisation_level in range(0, NUM_OPTIMISATION_LEVELS):
             count_for_marked_element = counts[f"{{0:0{NUM_QUBITS}b}}".format(marked_element)]
 
             all_depths.append(depth_for_marked_element)
-            all_counts.append(count_for_marked_element)
+            all_counts.append(count_for_marked_element/SHOTS * 100)
         print()
 
         # Store average of all depths
