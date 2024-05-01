@@ -40,7 +40,7 @@ for index, (name, data) in enumerate(sorted(positions.items(), key=lambda kv_pai
         counts_for_marked_element_as_array = [0 for _ in range(NUM_STATES)]
         for key_binary, value in counts_for_marked_element.items():
             binary_index = int(key_binary, 2)
-            counts_for_marked_element_as_array[binary_index] = value
+            counts_for_marked_element_as_array[binary_index] = value / SHOTS * 100
         counts_per_marked.append(counts_for_marked_element_as_array)
 
     coupling_figure, coupling_ax = plt.subplots(figsize=data["ratio"], layout="constrained")
@@ -50,7 +50,7 @@ for index, (name, data) in enumerate(sorted(positions.items(), key=lambda kv_pai
 
     # Draw heatmap
     axis = measures_ax[index//2][index%2]
-    heatmap = axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin=0, vmax=SHOTS)
+    heatmap = axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin=0, vmax=100)
     axis.set_xticks(TICKS_RANGE, TICKS, rotation=90)
     axis.set_yticks(TICKS_RANGE, TICKS)
     axis.set_title(f"{name}")
@@ -61,7 +61,7 @@ for index, (name, data) in enumerate(sorted(positions.items(), key=lambda kv_pai
     print(f"Done with {name}")
 
 colorbar = measures_figure.colorbar(heatmap, ax=measures_ax.ravel().tolist())
-colorbar.ax.set_ylabel("Amount Measured", rotation=-90, va="bottom")
+colorbar.ax.set_ylabel("Correctly Measured (%)", rotation=-90, va="bottom")
 
 plt.figure(measures_figure)
 path = os.path.join(directory, f"fake_providers_results.pdf")

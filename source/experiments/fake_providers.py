@@ -44,7 +44,7 @@ with open(os.path.join(couplings_directory, "provider_qubit_couplings.txt"), "r"
                 counts_for_marked_element_as_array = [0 for _ in range(NUM_STATES)]
                 for key_as_binary, value in counts_for_marked_element.items():
                     index = int(key_as_binary, 2)
-                    counts_for_marked_element_as_array[index] = value
+                    counts_for_marked_element_as_array[index] = value / SHOTS * 100
                 counts_per_marked.append(counts_for_marked_element_as_array)
 
             figure, (coupling_axis, measures_axis, depths_axis) = plt.subplots(3, 1, figsize=(9, 24))
@@ -54,9 +54,9 @@ with open(os.path.join(couplings_directory, "provider_qubit_couplings.txt"), "r"
             coupling_axis.set_title("Coupling Map")
             
             # Draw heatmap
-            heatmap = measures_axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin=0, vmax=SHOTS)
+            heatmap = measures_axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin=0, vmax=100)
             colorbar = measures_axis.figure.colorbar(heatmap, ax=measures_axis)
-            colorbar.ax.set_ylabel("Amount Measured", rotation=-90, va="bottom")
+            colorbar.ax.set_ylabel("Correctly Measured (%)", rotation=-90, va="bottom")
             measures_axis.set_xticks(TICKS_RANGE, TICKS)
             measures_axis.set_yticks(TICKS_RANGE, TICKS)
             measures_axis.set_xlabel("Measured")
