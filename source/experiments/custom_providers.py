@@ -1,7 +1,7 @@
 if __name__ != "__main__":
     exit(0)
 
-from . import Runner, Error, grovers_circuit, get_directory_in_results, UNIQUE_5_COUPLINGS, NUM_QUBITS, NUM_STATES, SHOTS
+from . import *
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
@@ -29,7 +29,7 @@ mpl.rcParams["font.size"] = 14
 
 for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
     # Create folder for each graph
-    folder_name = os.path.join(directory, f"{graph_idx}")
+    folder_name = os.path.join(directory, f"{GRAPH_DEGREE_ENCODING[graph_idx]}")
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
@@ -41,9 +41,9 @@ for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
                 continue
 
             if error_type == ERROR_TYPES[0]:
-                print(f"Running on Graph {graph_idx} with no noise...", end="")
+                print(f"Running on Graph {GRAPH_DEGREE_ENCODING[graph_idx]} with no noise...", end="")
             else:
-                print(f"Running on Graph {graph_idx} with {error_type} noise of amount {error_size}...", end="")
+                print(f"Running on Graph {GRAPH_DEGREE_ENCODING[graph_idx]} with {error_type} noise of amount {error_size}...", end="")
 
             # Run Grover once for each marked element and store the resulting counts
             counts_per_marked = []
@@ -97,11 +97,11 @@ for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
             depths_ax.set_xlabel("Marked")
             depths_ax.set_title("Depths per Marked Element")
 
-            file_name = f"{graph_idx}/{error_type}_{error_size}_grover_results.pdf"
-            title = f"Graph {graph_idx} with {error_type} noise of amount {error_size}"
+            file_name = f"{GRAPH_DEGREE_ENCODING[graph_idx]}/{error_type}_{error_size}_grover_results.pdf"
+            title = f"Graph {GRAPH_DEGREE_ENCODING[graph_idx]} with {error_type} noise of amount {error_size}"
             if error_type == ERROR_TYPES[0]:
-                file_name = f"{graph_idx}/no_noise_grover_results.pdf"
-                title = f"Graph {graph_idx} with no noise"
+                file_name = f"{GRAPH_DEGREE_ENCODING[graph_idx]}/no_noise_grover_results.pdf"
+                title = f"Graph {GRAPH_DEGREE_ENCODING[graph_idx]} with no noise"
 
             plt.suptitle(title)
             path = os.path.join(directory, file_name)

@@ -1,7 +1,7 @@
 if __name__ != "__main__":
     exit(0)
 
-from . import Runner, Error, grovers_circuit, get_directory_in_results, UNIQUE_5_COUPLINGS, NUM_QUBITS, NUM_STATES, SHOTS
+from . import *
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
@@ -88,7 +88,7 @@ for noise in noise_types:
 colorbar = figure.colorbar(heatmap, ax=axes.ravel().tolist())
 colorbar.ax.set_ylabel("Amount Measured", rotation=-90, va="bottom")
 
-file_name = f"graph_{graph_index}_grover_results.pdf"
+file_name = f"graph_{GRAPH_DEGREE_ENCODING[graph_index]}_grover_results.pdf"
 path = os.path.join(directory, file_name)
 
 plt.savefig(path)

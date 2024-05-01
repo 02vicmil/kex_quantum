@@ -1,7 +1,7 @@
 if __name__ != "__main__":
     exit(0)
 
-from . import Runner, Error, grovers_circuit, get_directory_in_results, UNIQUE_5_COUPLINGS, NUM_QUBITS, NUM_STATES, SHOTS
+from . import *
 import os
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -31,10 +31,12 @@ X_TICKS = np.arange(len(UNIQUE_5_COUPLINGS))
 WDITH = 0.2
 
 depth_axis.set_xticks(X_TICKS + 1.5*WDITH, range(0, len(UNIQUE_5_COUPLINGS)))
+depth_axis.set_xticklabels(GRAPH_DEGREE_ENCODING, rotation = 90)
 depth_axis.set_xlabel("Graph Number")
 depth_axis.set_ylabel("Depth")
 
 count_axis.set_xticks(X_TICKS + 1.5*WDITH, range(0, len(UNIQUE_5_COUPLINGS)))
+count_axis.set_xticklabels(GRAPH_DEGREE_ENCODING, rotation=90)
 count_axis.set_xlabel("Graph Number")
 count_axis.set_ylabel("Number of Correctly Measured")
 count_axis.set_ylim(0, SHOTS)
@@ -46,7 +48,7 @@ for optimisation_level in range(0, NUM_OPTIMISATION_LEVELS):
     counts_at_optimisation_level = []
 
     for graph_index, coupling in enumerate(UNIQUE_5_COUPLINGS):
-        print(f" GRAPH {graph_index}. i = ", end="")
+        print(f" GRAPH {GRAPH_DEGREE_ENCODING[graph_index]}. i = ", end="")
         all_depths = []
         all_counts = []
         for marked_element in range(0, NUM_STATES):

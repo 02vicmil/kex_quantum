@@ -1,5 +1,5 @@
 import os, pathlib
-from .. import grovers_circuit, Runner, Error, UNIQUE_5_COUPLINGS
+from .. import grovers_circuit, Runner, Error, UNIQUE_5_COUPLINGS, GRAPH_DEGREE_ENCODING
 
 ## Default parameters
 NUM_QUBITS = 3
