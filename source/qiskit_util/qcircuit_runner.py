@@ -152,16 +152,15 @@ class Runner:
         graph.add_nodes_from(range(0, self.num_qubits))
         graph.add_edges_from(list(self.coupling_map))
         labels = {n : str(n) for n in graph.nodes}
-        node_color = "cyan"
+        highlight = []
 
         if color_used_qubits:
-            node_color = []
             dag = circuit_to_dag(self.transpiled_circuit)
             for i, q in enumerate(dag.qubits):
-                if q in dag.idle_wires():
-                    node_color.append("cyan")
-                else:
-                    node_color.append("orange")
+                if not q in dag.idle_wires():
+                    highlight.append(i)
+
+        highlight_labels = {n : str(n) for n in highlight}
 
         if not axis:
             plt.figure()
@@ -179,11 +178,18 @@ class Runner:
                     x += width
                 x = -1
                 y -= height
-            nx.draw(graph, pos, labels=labels, arrowsize=5, node_color=node_color, font_family="serif", ax=axis)
         elif nx.is_planar(graph) and not draw_circular:
-            nx.draw_spring(graph, labels=labels, arrowsize=5, node_color=node_color, font_family="serif", ax=axis)
+            pos = nx.spring_layout(graph)
         else:
-            nx.draw_circular(graph, labels=labels, arrowsize=5, node_color=node_color, font_family="serif", ax=axis)
+            pos = nx.circular_layout(graph)
+        nx.draw(graph, pos, labels=labels, 
+                arrowsize=5, node_color="cyan", 
+                font_color="black", font_weight="bold",
+                ax=axis)
+        nx.draw(graph.subgraph(highlight), pos, labels=highlight_labels, 
+                arrowsize=5, node_color="purple", 
+                font_color = "white", font_weight="bold",
+                ax=axis)
         return self
 
     def get_depth(self) -> int:
