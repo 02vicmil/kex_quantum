@@ -72,8 +72,19 @@ for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
                 counts_for_i_as_array = [0 for _ in range(NUM_STATES)]
                 for key_binary, value in counts_for_i.items():
                     index = int(key_binary, 2)
-                    counts_for_i_as_array[index] = value/SHOTS * 100
-                counts_per_marked.append(counts_for_i_as_array)
+                    counts_for_i_as_array[index] = value
+
+                values = np.array(counts_for_i_as_array)
+                percentage = 100*values / SHOTS
+                percentage_int = 100*values // SHOTS
+                remainders_with_indices = [(percentage[i] - percentage_int[i], i) for i in range(len(percentage))]
+                remainders_with_indices.sort(key=lambda x: x[0], reverse=True)
+                aux = 100-sum(percentage_int)
+                for i in range(aux):
+                    idx = remainders_with_indices[i][1]
+                    percentage_int[idx] += 1
+
+                counts_per_marked.append(percentage_int)
 
             figure, (coupling_ax, measures_ax, depths_ax) = plt.subplots(3, 1, figsize=(9, 24))
             
@@ -90,6 +101,14 @@ for graph_idx, coupling in enumerate(UNIQUE_5_COUPLINGS):
             measures_ax.set_xlabel("Measured")
             measures_ax.set_ylabel("Marked")
             measures_ax.set_title(f"Results ({SHOTS} shots)")
+
+            for (j,i),label in np.ndenumerate(counts_per_marked):
+                color = "black"
+                if label < 50:
+                    color = "white"
+
+                if i == j:
+                    measures_ax.text(i, j, label, ha='center', va='center', color=color, fontsize=16, weight="bold")
 
             # Draw barplot of depths for each grover of marked element
             depths_ax.bar(TICKS, depths_per_marked)

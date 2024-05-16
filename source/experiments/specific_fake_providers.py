@@ -32,28 +32,46 @@ for index, (name, data) in enumerate(sorted(positions.items(), key=lambda kv_pai
 
     # Run on grover once for each marked element and store the resulting counts
     counts_per_marked = []
-    depths_per_marked = []
     for marked_element in range(0, NUM_STATES):
         counts_for_marked_element = grovers[marked_element].with_backend(backend).run(plot_results=False)
-        depth_for_marked_element = grovers[marked_element].and_transpile().get_depth()
-        depths_per_marked.append(depth_for_marked_element)
         counts_for_marked_element_as_array = [0 for _ in range(NUM_STATES)]
         for key_binary, value in counts_for_marked_element.items():
             binary_index = int(key_binary, 2)
-            counts_for_marked_element_as_array[binary_index] = value / SHOTS * 100
-        counts_per_marked.append(counts_for_marked_element_as_array)
+            counts_for_marked_element_as_array[binary_index] = value
+
+        values = np.array(counts_for_marked_element_as_array)
+        percentage = 100*values / SHOTS
+        percentage_int = 100*values // SHOTS
+        remainders_with_indices = [(percentage[i] - percentage_int[i], i) for i in range(len(percentage))]
+        remainders_with_indices.sort(key=lambda x: x[0], reverse=True)
+        aux = 100-sum(percentage_int)
+        for i in range(aux):
+            idx = remainders_with_indices[i][1]
+            percentage_int[idx] += 1
+
+        counts_per_marked.append(percentage_int)
 
     coupling_figure, coupling_ax = plt.subplots(figsize=data["ratio"], layout="constrained")
 
     # Draw coupling map first
-    grovers[0].and_draw_coupling_map(axis=coupling_ax, color_used_qubits=True, grid_positions=data["positions"])
+    grovers[0].and_transpile().and_draw_coupling_map(axis=coupling_ax, color_used_qubits=True, grid_positions=data["positions"])
+
+    axis = measures_ax[index//2][index%2]
 
     # Draw heatmap
-    axis = measures_ax[index//2][index%2]
-    heatmap = axis.imshow(np.array(counts_per_marked), cmap=mpl.colormaps["magma"], vmin=0, vmax=100)
+    heatmap = axis.imshow(counts_per_marked, cmap=mpl.colormaps["magma"], vmin=0, vmax=100)
     axis.set_xticks(TICKS_RANGE, TICKS, rotation=90)
     axis.set_yticks(TICKS_RANGE, TICKS)
     axis.set_title(f"{name}")
+
+    for (j,i),label in np.ndenumerate(counts_per_marked):
+        color = "black"
+        if label < 50:
+            color = "white"
+
+        if i == j:
+            axis.text(i, j, label, ha='center', va='center', color=color, fontsize=16, weight="bold")
+
 
     plt.figure(coupling_figure)
     path = os.path.join(directory, f"{name}_coupling.pdf")
